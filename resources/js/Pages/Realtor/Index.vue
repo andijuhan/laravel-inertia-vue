@@ -9,6 +9,12 @@
                 class="flex flex-col md:flex-row gap-2 md:items-center justify-between"
             >
                 <div>
+                    <div
+                        v-if="listing.sold_at"
+                        class="text-xs font-medium border border-green-300 text-green-500 rounded-md p-1 inline-block uppercase mb-2"
+                    >
+                        Sold
+                    </div>
                     <div class="xl:flex items-center gap-2">
                         <Price
                             :price="listing.price"
@@ -62,6 +68,13 @@
                             >Images ({{ listing.images_count }})</Link
                         >
                     </div>
+                    <div class="mt-2">
+                        <Link
+                            :href="route('realtor.listing.show', listing.id)"
+                            class="btn-outline flex items-center justify-center flex-grow text-xs font-medium"
+                            >Offers ({{ listing.offers_count }})</Link
+                        >
+                    </div>
                 </section>
             </div>
         </Box>
@@ -69,6 +82,7 @@
     <div v-if="listings.data.length" class="w-full flex justify-center my-8">
         <Pagination :links="listings.links" />
     </div>
+    <EmptyState v-else>No Listings yet.</EmptyState>
 </template>
 
 <script setup>
@@ -79,6 +93,7 @@ import Price from "@/Components/Price.vue";
 import Box from "@/Components/UI/Box.vue";
 import RealtorFilters from "./Index/Components/RealtorFilters.vue";
 import Pagination from "@/Components/UI/Pagination.vue";
+import EmptyState from "@/Components/UI/EmptyState.vue";
 
 defineProps({
     listings: Object,

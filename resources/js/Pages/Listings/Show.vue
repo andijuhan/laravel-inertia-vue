@@ -1,10 +1,10 @@
 <template>
     <div class="flex flex-col-reverse md:grid md:grid-cols-12 gap-2">
-        <Box class="md:col-span-7 flex items-center justify-center">
-            <div
-                v-if="listing.images.length"
-                class="grid grid-cols-2 gap-1 w-full"
-            >
+        <Box
+            v-if="listing.images.length"
+            class="md:col-span-7 flex items-center justify-center"
+        >
+            <div class="grid grid-cols-2 gap-1 w-full">
                 <img
                     v-for="image in listing.images"
                     :key="image.id"
@@ -13,8 +13,12 @@
                     class="h-[250px] w-full rounded-md object-cover object-center"
                 />
             </div>
-            <div v-else class="font-medium text-gray-500">No images</div>
         </Box>
+        <EmptyState
+            class="md:col-span-7 flex items-center justify-center"
+            v-else
+            >No Images</EmptyState
+        >
         <div class="flex flex-col md:col-span-5 gap-2">
             <Box>
                 <template #header> Basic info </template>
@@ -85,11 +89,12 @@
                 </div>
             </Box>
             <MakeOffer
-                v-if="user"
+                v-if="user && !offerMade"
                 @offer-updated="offer = $event"
                 :listing-id="listing.id"
                 :price="listing.price"
             />
+            <OfferMade v-if="user && offerMade" :offer="offerMade" />
         </div>
     </div>
 </template>
@@ -104,6 +109,8 @@ import { computed, ref } from "vue";
 import { useMonthlyPayment } from "@/Composables/useMonthlyPayment";
 import MakeOffer from "./Show/Components/MakeOffer.vue";
 import { usePage } from "@inertiajs/vue3";
+import OfferMade from "./Show/Components/OfferMade.vue";
+import EmptyState from "@/Components/UI/EmptyState.vue";
 
 const interestRate = ref(2.5);
 const duration = ref(20);
@@ -111,6 +118,7 @@ const duration = ref(20);
 const page = usePage();
 const props = defineProps({
     listing: Object,
+    offerMade: Object,
 });
 
 const offer = ref(props.listing.price);

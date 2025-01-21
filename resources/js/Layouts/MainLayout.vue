@@ -17,6 +17,18 @@
                     class="flex items-center justify-between gap-4"
                 >
                     <Link
+                        class="text-gray-500 relative"
+                        :href="route('notification.index')"
+                    >
+                        🔔
+                        <div
+                            v-if="notificationCount"
+                            class="absolute -top-1 -right-1 text-xs bg-red-500 text-white px-1 rounded-full"
+                        >
+                            {{ notificationCount }}
+                        </div>
+                    </Link>
+                    <Link
                         class="text-sm text-gray-500"
                         :href="route('realtor.listing.index')"
                         >{{ user.name }}</Link
@@ -60,4 +72,7 @@ import { computed } from "vue";
 const page = usePage();
 const flashSuccess = computed(() => page.props.flash.success);
 const user = computed(() => page.props.user);
+const notificationCount = computed(() =>
+    Math.min(page.props.user.notificationCount, 9)
+);
 </script>

@@ -40,7 +40,12 @@ class HandleInertiaRequests extends Middleware
                 'success' => fn() => $request->session()->get('success'),
             ],
             'user' => fn() => $request->user()
-                ? $request->user()->only('id', 'name', 'email')
+                ? [
+                    'id' => $request->user()->id,
+                    'name' => $request->user()->name,
+                    'email' => $request->user()->email,
+                    'notificationCount' => $request->user()->unreadNotifications()->count()
+                ]
                 : null,
         ]);
     }
